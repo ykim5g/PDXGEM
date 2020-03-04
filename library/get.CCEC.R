@@ -1,11 +1,11 @@
 
-get.CCEC <- function( set1, set2, probeset=probe.cor, cutoff=0.2, cor.cutoff=NULL, method="pearson",method.1="spearman"){
+get.CCEC <- function( set1, set2, probeset=probe.cor, cutoff=0.2, cor.cutoff=NULL, method="pearson",method.1="pearson"){
   #set1 <- rma
   #set2 <- rx
   #probeset <- target[120:130]
   
-  set1.cor.cor = ( cor(t(set1[probeset, ]), method=method.1))    ## correlation among genes within NCI60 drug cell line
-  set2.cor.cor = ( cor(t(set2[probeset, ]), method=method.1) )   ## correlation among genes within training set
+  set1.cor.cor = ( cor(t(set1[probeset, ]), method=method.1))    ## correlation among genes within PDX
+  set2.cor.cor = ( cor(t(set2[probeset, ]), method=method.1) )   ## correlation among genes within patient
   
   n.cor.num <- length(probeset)
   ccc.cor<- matrix(1, nrow=n.cor.num, ncol=2)
