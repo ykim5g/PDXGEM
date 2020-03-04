@@ -145,7 +145,7 @@ source("./library/get.PDX.data.R")
 source("./library/scaleExpressionData.v02.R")
 source("./library/scaleExpressionData.R")
 source("./library/get.dataSet.R")
-
+source("./library/get.CCEC.R")
 
 ###### Gene annotation of U133p2 to add gene symbol to individual probeset
 ###saveRDS(u133p2.gene.symbol,  file="./RData/u133p2.gene.symbol.name.rds")
@@ -527,8 +527,11 @@ shinyServer(function(input, output, session) {
     if( m$method=="ttest" ) set2 <- m$markerset[ target, ]
     
     a <- list()
-    a[[1]] <- a.1 <- ccc(set1, set2, probeset=target, cutoff=sig.level.ccc, 
+    ##
+    a[[1]] <- a.1 <- get.CCEC(set1, set2, probeset=target, cutoff=sig.level.ccc, 
                          cor.cutoff=cor.cutoff, method=method, method.1=method.1)
+    #a[[1]] <- a.1 <- get.ccc(set1, set2, probeset=target, cutoff=sig.level.ccc, 
+    #                          cor.cutoff=cor.cutoff, method=method, method.1=method.1)
     
     
     ### gather only significant
