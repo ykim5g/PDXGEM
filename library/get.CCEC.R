@@ -14,7 +14,7 @@ get.CCEC <- function( set1, set2, probeset=probe.cor, cutoff=0.2, cor.cutoff=NUL
     # i <- 110;  print(i)
     ### Calculates Lin's (1989, 2000) concordance correlation coefficient for agreement on a continuous measure.
     ## epi.ccc 
-    xx <- get.CCC(set1.cor.cor[i,-i], set2.cor.cor[i,-i], alternative="greater")        
+    xx <- compute.CCC(set1.cor.cor[i,-i], set2.cor.cor[i,-i], alternative="greater")        
     ccc.cor[i,1] = xx$rho.c$est
     ccc.cor[i,2] = xx$p.value #.asym
   }
