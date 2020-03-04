@@ -11,6 +11,7 @@ require(dplyr)
 
 homedir <- "./"
 setwd(homedir)
+
 #source("./library/library-2016-01-25_new.R")
 #source("./library/library_appendix_2017-08-10.R")
 
@@ -29,7 +30,6 @@ head( cbind( rownames(hess100.clinic), colnames(hess100), names(hess100.response
 hess100.clinic$is.valid <- 1
 rownames(hess100.clinic) <- colnames(hess100)
 names(hess100.response) <- colnames(hess100)
-
 
 
 ## array data
@@ -85,8 +85,6 @@ subset( PDX.clinic, Model %in% c("X-2353", "X-2967") )
 
 load("./RData/rma.RData")
 
-
-
 ########### Novartis Data  ###############
 get.PDX.data <- function( compound.name ){
   
@@ -128,8 +126,6 @@ get.PDX.data <- function( compound.name ){
 }
 
 
-
-
 get.CCCset <- function(origin="Breast"){
   filename=paste("./RData/CCCset/", origin, "-CCC.rds", sep="")
   cat(filename, "\n")
@@ -139,19 +135,18 @@ get.CCCset <- function(origin="Breast"){
 }
 
 
-
-
 source("./library/get.PDX.data.R")
 source("./library/scaleExpressionData.v02.R")
 source("./library/scaleExpressionData.R")
 source("./library/get.dataSet.R")
 source("./library/get.CCEC.R")
+source("./library/get.CCC.R")
+
 
 ###### Gene annotation of U133p2 to add gene symbol to individual probeset
 ###saveRDS(u133p2.gene.symbol,  file="./RData/u133p2.gene.symbol.name.rds")
 ##u133p2.gene.symbol <- readRDS(file="./RData/u133p2.gene.symbol.rds")
 u133p2.gene.symbol <- readRDS(file="./RData/u133p2.gene.symbol.name.rds")
-
 
 
 # Define server logic for random distribution application
@@ -337,7 +332,7 @@ shinyServer(function(input, output, session) {
       markerset.clinic <- x$clinic[id, ]
       method="pearson"    
       
-      ### GSEA..
+      ### biomakrer
       cat("We get markerset of size ", ncol(markerset), "\n")
       if( input$BiomarkerDiscoveryMethod!="else"){
         
@@ -349,27 +344,6 @@ shinyServer(function(input, output, session) {
         }else if( input$BiomarkerDiscoveryMethod == "correlation" ){
           method="pearson"   
           s <- biomarker.discovery.correlation(markerset=markerset, markerset.response=markerset.response, method=method)
-          
-        }else if( input$BiomarkerDiscoveryMethod %in% c("NIRA", "NIRA-rank")) {
-          
-          method.type <- ifelse(input$BiomarkerDiscoveryMethod=="NIRA", "lm", "lm.rank")
-          
-          ####  source("./library/library_appendix_2016-08-17.R")
-          ####  markers.d2 
-          reference.type <- markerset.clinic$tissue[1] #"ovary"
-          # args( biomarker.discovery.regression)
-          #biomarker.discovery.regression.v03 <- function( markerset, markerset.response, covariate=NULL, 
-          #                                                method="lm", interaction=FALSE, sig.level=0.05, plot.check=TRUE ){
-          
-          s <- biomarker.discovery.regression.v03( markerset=markerset, 
-                                                   markerset.response=markerset.response, 
-                                                   interaction=TRUE,
-                                                   #is.ANOVA=TRUE, 
-                                                   sig.level=0.05,
-                                                   covariate=data.frame(relevel( factor(markerset.clinic$tissue), ref=reference.type)), 
-                                                   method=method.type, plot.check=TRUE)
-          attr(s$markerset, "name") <- paste(input$MarkerSet, ncol(s$markerset),sep="_")
-          
           
         }else if(input$BiomarkerDiscoveryMethod=="t-test"){
           method="ttest"
@@ -397,7 +371,7 @@ shinyServer(function(input, output, session) {
             n.nonres <- sum(markerset.response==0)
             s <- biomarker.discovery.ttest.v02(markerset=markerset, markerset.response=markerset.response, 
                                                n.res = n.res, n.nonres=n.nonres)
-          }else{ ## more than 2 clssess
+          }else{ ## default: t-test
             n.res <- sum(markerset.response<0)
             n.nonres <- sum(markerset.response>0)
             s <- biomarker.discovery.ttest.v02(markerset=markerset, markerset.response=markerset.response, 
@@ -416,6 +390,8 @@ shinyServer(function(input, output, session) {
   }) ## End of 'get.Biomarker'
   
   
+  
+  
   # m <- biomarker.select(x=mset, p.cutoff=0.05)
   select.BiomarkerSet <- reactive({
     
@@ -423,12 +399,12 @@ shinyServer(function(input, output, session) {
     ## x <- readRDS( file="./RData/rds/5FU_Novartis_large_intestine_t-test.rds")
     mset <- get.Biomarker()
     
-    m <- biomarker.select( x=mset, q.cutoff=0.2) # 478 NCI-60 ANCOVA
+    m <- biomarker.select( x=mset, q.cutoff=0.2) # In general, FDR is allowed up to 20%. 
     m$FDR.correction <- "controlling FDR of 0.05"
     
     if( length(m$marker) < 30 ){
       cat("Control P-value because FDR-controlled result is so conservative\n")
-      m <- biomarker.select( x=mset, p.cutoff=0.05) # 478 NCI-60 ANCOVA 
+      m <- biomarker.select( x=mset, p.cutoff=0.05) #  
       m$FDR.correction <- "controlling nominal P-value of 0.05"  
       
       if( length(m$marker) < 5){
