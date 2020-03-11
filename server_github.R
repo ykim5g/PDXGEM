@@ -33,12 +33,23 @@ names(hess100.response) <- colnames(hess100)
 
 
 ## array data
-load(file="./RData/GSE78806/PDX.array.total.RData" )
+PDX.clinic <- readRDS(file="./RData/GSE78806/PDX.clinic.rds")
+#load(file="./RData/GSE78806/PDX.array.total.RData" )
+
+PDX.array.one <- readRDS(file="./RData/GSE78806/PDX.array.one.rds")
+PDX.array.two <- readRDS(file="./RData/GSE78806/PDX.array.two.rds")
+PDX.array.three <- readRDS(file="./RData/GSE78806/PDX.array.three.rds")
+PDX.array.four <- readRDS(file="./RData/GSE78806/PDX.array.four.rds")
+PDX.array <- cbind(PDX.array.one, PDX.array.two, PDX.array.three, PDX.array.four)
+rm(PDX.array.one, PDX.array.two, PDX.array.three, PDX.array.four)
+
   dim(PDX.array) ## 54,675 x 661
   head( PDX.clinic )
   table( PDX.clinic$passage )
   cbind( colnames(PDX.array), PDX.clinic$geo_accession )
 
+
+  
 ### Making Mouse model number and IDs
 xx <- unlist( lapply( strsplit(PDX.clinic$title, "-"), function(x)x[1]) )
 id.short <- which(nchar(xx)<4)
