@@ -177,7 +177,6 @@ ui <- fluidPage(
                          
                                  "NSCLC:GSE68793:TCGA:NoErlotinib",
                          
-                                 "HNSCC_GSE65021(Illumina)_Cetuximab",
                                  
                                  "Pancreatic:GSE57495:Moffitt",
                                  "Pancreatic:EMEXP2780",
