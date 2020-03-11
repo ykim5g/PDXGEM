@@ -56,7 +56,7 @@ ui <- fluidPage(
                        label="Step 1: Select a method for initial drug sensitivity biomarkers", 
                        choices=list("correlation"="correlation", 
                                     "correlation-rank"="correlation-rank", 
-                                    "t-test"="t-test", 
+                                    "t-test"="t-test2", 
                                    "else"="else"),
                        selected="else"
           )
