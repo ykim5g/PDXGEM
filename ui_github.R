@@ -57,7 +57,6 @@ ui <- fluidPage(
                        choices=list("correlation"="correlation", 
                                     "correlation-rank"="correlation-rank", 
                                     "t-test"="t-test", 
-                                    "t-test2"="t-test2",
                                    "else"="else"),
                        selected="else"
           )
