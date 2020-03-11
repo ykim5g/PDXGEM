@@ -12,9 +12,6 @@ require(dplyr)
 homedir <- "./"
 setwd(homedir)
 
-#source("./library/library-2016-01-25_new.R")
-#source("./library/library_appendix_2017-08-10.R")
-
 drug.name <- "paclitaxel"
 
 ### Load Patient Data Sets
